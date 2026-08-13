@@ -39,11 +39,14 @@ export function useStageScroll() {
       });
 
       let i = 0;
-      while (i < centers.length - 1 && focus >= centers[i + 1]) i += 1;
-      const a = anchors[i];
-      const b = anchors[Math.min(i + 1, anchors.length - 1)];
-      const span = centers[Math.min(i + 1, centers.length - 1)] - centers[i];
-      const t = span > 0 ? Math.min(1, Math.max(0, (focus - centers[i]) / span)) : 0;
+      while (i < centers.length - 1 && focus >= (centers[i + 1] ?? 0)) i += 1;
+      const j = Math.min(i + 1, anchors.length - 1);
+      const a = anchors[i]!;
+      const b = anchors[j]!;
+      const ca = centers[i] ?? 0;
+      const cb = centers[j] ?? 0;
+      const span = cb - ca;
+      const t = span > 0 ? Math.min(1, Math.max(0, (focus - ca) / span)) : 0;
       const ease = t * t * (3 - 2 * t);
 
       stage.target = {
