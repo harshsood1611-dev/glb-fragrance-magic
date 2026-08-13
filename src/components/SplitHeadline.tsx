@@ -1,6 +1,7 @@
 type SplitHeadlineProps = {
   text: string;
   className?: string;
+  charClassName?: string;
   delay?: number;
   stagger?: number;
 };
@@ -9,6 +10,7 @@ type SplitHeadlineProps = {
 export function SplitHeadline({
   text,
   className,
+  charClassName = "",
   delay = 0,
   stagger = 0.035,
 }: SplitHeadlineProps) {
@@ -18,7 +20,7 @@ export function SplitHeadline({
         <span
           key={`${char}-${index}`}
           aria-hidden="true"
-          className="char-in"
+          className={`char-in ${charClassName}`}
           style={{ animationDelay: `${delay + index * stagger}s` }}
         >
           {char}
