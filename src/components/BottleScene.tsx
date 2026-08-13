@@ -1,6 +1,5 @@
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Environment, Float, useProgress } from "@react-three/drei";
-import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -198,10 +197,6 @@ export default function BottleScene() {
           <Bottle />
           <ScentTrail color={variant.glow} />
         </Suspense>
-        <EffectComposer enableNormalPass={false}>
-          <Bloom intensity={0.7} luminanceThreshold={0.65} mipmapBlur />
-          <Vignette offset={0.28} darkness={0.62} />
-        </EffectComposer>
       </Canvas>
       <Loader />
     </>
