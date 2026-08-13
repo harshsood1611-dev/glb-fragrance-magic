@@ -7,7 +7,7 @@ export function useVariant() {
     getVariantIndex,
     () => 0,
   );
-  return { index, variant: VARIANTS[index] };
+  return { index, variant: VARIANTS[index] ?? VARIANTS[0]! };
 }
 
 /**
