@@ -108,7 +108,7 @@ function Home() {
         <div className="relative z-10 mx-auto w-full max-w-6xl text-center">
           <p className="eyebrow">Dubai · Est. 2019 · Extrait de Parfum</p>
           <h1 className="mt-6 font-display text-[19vw] leading-[0.82] tracking-tight uppercase sm:text-[15vw]">
-            <SplitHeadline text="Aurea" className="block" charClassName="gold-text" delay={0.9} />
+            <SplitHeadline text="Aurea" className="block" charClassName="text-primary" delay={0.9} />
             <SplitHeadline
               text="Parfums"
               className="block text-foreground/90"
