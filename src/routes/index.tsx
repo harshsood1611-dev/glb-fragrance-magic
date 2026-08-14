@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { Stage3D } from "@/components/Stage3D";
+import { ModelControls, Stage3D } from "@/components/Stage3D";
 import { SplitHeadline } from "@/components/SplitHeadline";
 import { Faq } from "@/components/site/Faq";
 import { Marquee } from "@/components/site/Marquee";
@@ -92,6 +92,7 @@ function Home() {
     >
       <div className="curtain pointer-events-none fixed inset-0 z-50 bg-background" />
       <Stage3D />
+      <ModelControls />
       <Nav count={cart} />
 
       {/* HERO — pinned bottle occluding an oversized headline */}

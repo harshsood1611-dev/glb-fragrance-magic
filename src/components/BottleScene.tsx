@@ -4,14 +4,14 @@ import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import bottleAsset from "@/assets/perfume_bottle.glb.asset.json";
-import { useVariant } from "@/hooks/use-stage";
-import { damp, stage, VARIANTS } from "@/lib/stage";
+import { useModel, useVariant } from "@/hooks/use-stage";
+import { damp, stage, VARIANTS, type ModelOption } from "@/lib/stage";
 
-function Bottle() {
-  const gltf = useLoader(GLTFLoader, bottleAsset.url);
+function Bottle({ model }: { model: ModelOption }) {
+  const gltf = useLoader(GLTFLoader, model.url);
   const group = useRef<THREE.Group>(null);
   const spin = useRef(0);
+
 
   const scene = useMemo(() => {
     const clone = gltf.scene.clone(true);
@@ -20,7 +20,7 @@ function Bottle() {
     const center = new THREE.Vector3();
     box.getSize(size);
     box.getCenter(center);
-    const unit = 2.6 / Math.max(size.x, size.y, size.z);
+    const unit = model.scale / Math.max(size.x, size.y, size.z);
     clone.scale.setScalar(unit);
     clone.position.set(-center.x * unit, -center.y * unit, -center.z * unit);
 
@@ -29,7 +29,7 @@ function Bottle() {
       if (!mesh.isMesh) return;
       const material = mesh.material as THREE.MeshStandardMaterial;
       if (!material || Array.isArray(mesh.material)) return;
-      const name = material.name ?? "";
+      const name = (material.name ?? "").toLowerCase();
       if (name.includes("glass")) {
         mesh.material = new THREE.MeshPhysicalMaterial({
           transmission: 1,
@@ -55,7 +55,7 @@ function Bottle() {
     });
 
     return clone;
-  }, [gltf]);
+  }, [gltf, model.scale]);
 
   const liquidMaterials = useMemo(() => {
     const found: THREE.MeshPhysicalMaterial[] = [];
@@ -174,6 +174,7 @@ function Loader() {
 
 export default function BottleScene() {
   const { variant } = useVariant();
+  const { model } = useModel();
 
   return (
     <>
@@ -194,7 +195,7 @@ export default function BottleScene() {
         />
         <Suspense fallback={null}>
           <Environment preset="studio" environmentIntensity={0.85} />
-          <Bottle />
+          <Bottle key={model.id} model={model} />
           <ScentTrail color={variant.glow} />
         </Suspense>
       </Canvas>

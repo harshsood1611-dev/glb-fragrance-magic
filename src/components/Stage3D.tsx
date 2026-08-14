@@ -1,5 +1,6 @@
 import { ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
+import { ModelSwitcher } from "./site/ModelSwitcher";
 
 const BottleScene = lazy(() => import("./BottleScene"));
 
@@ -15,3 +16,15 @@ export function Stage3D() {
     </div>
   );
 }
+
+/** Rendered outside the canvas layer so it stays clickable above page sections. */
+export function ModelControls() {
+  return (
+    <ClientOnly fallback={null}>
+      <Suspense fallback={null}>
+        <ModelSwitcher />
+      </Suspense>
+    </ClientOnly>
+  );
+}
+

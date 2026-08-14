@@ -1,5 +1,14 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { getVariantIndex, lerp, stage, subscribeVariant, VARIANTS } from "@/lib/stage";
+import {
+  getModelIndex,
+  getVariantIndex,
+  lerp,
+  stage,
+  subscribeModel,
+  subscribeVariant,
+  VARIANTS,
+} from "@/lib/stage";
+import { MODELS } from "@/lib/models";
 
 export function useVariant() {
   const index = useSyncExternalStore(
@@ -175,4 +184,13 @@ export function useSmoothScroll() {
       cleanup();
     };
   }, []);
+}
+
+export function useModel() {
+  const index = useSyncExternalStore(
+    (fn) => subscribeModel(fn),
+    getModelIndex,
+    () => 0,
+  );
+  return { index, model: MODELS[index] ?? MODELS[0]! };
 }

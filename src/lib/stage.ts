@@ -76,3 +76,25 @@ export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export const damp = (a: number, b: number, lambda: number, dt: number) =>
   lerp(a, b, 1 - Math.exp(-lambda * dt));
+
+/** Selectable 3D models — lets us A/B test different bottle GLBs in the same scene. */
+export type ModelOption = { id: string; label: string; url: string; scale: number };
+
+const modelListeners = new Set<() => void>();
+
+export const modelState = { index: 0 };
+
+export function subscribeModel(fn: () => void) {
+  modelListeners.add(fn);
+  return () => modelListeners.delete(fn);
+}
+
+export function setModel(index: number) {
+  if (modelState.index === index) return;
+  modelState.index = index;
+  modelListeners.forEach((fn) => fn());
+}
+
+export function getModelIndex() {
+  return modelState.index;
+}
