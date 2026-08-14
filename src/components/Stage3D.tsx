@@ -11,10 +11,20 @@ export function Stage3D() {
       <ClientOnly fallback={null}>
         <Suspense fallback={null}>
           <BottleScene />
-          <ModelSwitcher />
         </Suspense>
       </ClientOnly>
     </div>
+  );
+}
+
+/** Rendered outside the canvas layer so it stays clickable above page sections. */
+export function ModelControls() {
+  return (
+    <ClientOnly fallback={null}>
+      <Suspense fallback={null}>
+        <ModelSwitcher />
+      </Suspense>
+    </ClientOnly>
   );
 }
 

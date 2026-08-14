@@ -8,7 +8,7 @@ export function ModelSwitcher() {
   const { index } = useModel();
 
   return (
-    <div className="glass-panel pointer-events-auto fixed bottom-6 left-6 z-40 flex items-center gap-1 rounded-full p-1">
+    <div className="glass-panel pointer-events-auto fixed bottom-6 left-6 z-50 flex items-center gap-1 rounded-full p-1">
       {MODELS.map((model, i) => (
         <button
           key={model.id}
