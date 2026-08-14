@@ -30,8 +30,7 @@ function Bottle({ model }: { model: ModelOption }) {
       const material = mesh.material as THREE.MeshStandardMaterial;
       if (!material || Array.isArray(mesh.material)) return;
       const name = (material.name ?? "").toLowerCase();
-      const hasNamedParts = name.includes("glass") || name.includes("liquid");
-      if (name.includes("glass") || !hasNamedParts) {
+      if (name.includes("glass")) {
         mesh.material = new THREE.MeshPhysicalMaterial({
           transmission: 1,
           thickness: 1.1,
