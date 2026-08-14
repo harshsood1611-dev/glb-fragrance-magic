@@ -4,14 +4,14 @@ import { Suspense, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import bottleAsset from "@/assets/perfume_bottle.glb.asset.json";
-import { useVariant } from "@/hooks/use-stage";
-import { damp, stage, VARIANTS } from "@/lib/stage";
+import { useModel, useVariant } from "@/hooks/use-stage";
+import { damp, stage, VARIANTS, type ModelOption } from "@/lib/stage";
 
-function Bottle() {
-  const gltf = useLoader(GLTFLoader, bottleAsset.url);
+function Bottle({ model }: { model: ModelOption }) {
+  const gltf = useLoader(GLTFLoader, model.url);
   const group = useRef<THREE.Group>(null);
   const spin = useRef(0);
+
 
   const scene = useMemo(() => {
     const clone = gltf.scene.clone(true);
