@@ -1,5 +1,6 @@
 import { ClientOnly } from "@tanstack/react-router";
 import { lazy, Suspense } from "react";
+import { ModelSwitcher } from "./site/ModelSwitcher";
 
 const BottleScene = lazy(() => import("./BottleScene"));
 
@@ -10,8 +11,10 @@ export function Stage3D() {
       <ClientOnly fallback={null}>
         <Suspense fallback={null}>
           <BottleScene />
+          <ModelSwitcher />
         </Suspense>
       </ClientOnly>
     </div>
   );
 }
+
