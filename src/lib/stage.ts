@@ -4,6 +4,7 @@ export type StageTarget = {
   scale: number;
   rotY: number;
   rotX: number;
+  rotZ: number;
 };
 
 export type Variant = {
@@ -48,9 +49,12 @@ export const VARIANTS: Variant[] = [
 
 /** Mutable render state read inside the r3f frame loop (never triggers React renders). */
 export const stage = {
-  target: { x: 0, y: 0, scale: 1, rotY: 0, rotX: 0 } as StageTarget,
+  target: { x: 0, y: 0, scale: 1, rotY: 0, rotX: 0, rotZ: 0 } as StageTarget,
   dragVelocity: 0,
   dragOffset: 0,
+  dragVelocityZ: 0,
+  dragOffsetZ: 0,
+  spinZ: false,
   pointer: { x: 0, y: 0 },
   variantIndex: 0,
 };
@@ -97,4 +101,21 @@ export function setModel(index: number) {
 
 export function getModelIndex() {
   return modelState.index;
+}
+
+/** Continuous Z-axis (tumble) spin toggle — useful for inspecting a model end over end. */
+const spinListeners = new Set<() => void>();
+
+export function subscribeSpinZ(fn: () => void) {
+  spinListeners.add(fn);
+  return () => spinListeners.delete(fn);
+}
+
+export function toggleSpinZ() {
+  stage.spinZ = !stage.spinZ;
+  spinListeners.forEach((fn) => fn());
+}
+
+export function getSpinZ() {
+  return stage.spinZ;
 }

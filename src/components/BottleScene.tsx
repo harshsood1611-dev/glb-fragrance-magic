@@ -11,6 +11,7 @@ function Bottle({ model }: { model: ModelOption }) {
   const gltf = useLoader(GLTFLoader, model.url);
   const group = useRef<THREE.Group>(null);
   const spin = useRef(0);
+  const spinZ = useRef(0);
 
 
   const scene = useMemo(() => {
@@ -77,7 +78,10 @@ function Bottle({ model }: { model: ModelOption }) {
 
     stage.dragOffset += stage.dragVelocity * delta;
     stage.dragVelocity *= Math.exp(-2.6 * delta);
+    stage.dragOffsetZ += stage.dragVelocityZ * delta;
+    stage.dragVelocityZ *= Math.exp(-2.6 * delta);
     spin.current += delta * 0.16;
+    if (stage.spinZ) spinZ.current += delta * 0.7;
 
     const t = stage.target;
     node.position.x = damp(node.position.x, t.x + stage.pointer.x * 0.12, 3, delta);
@@ -89,6 +93,12 @@ function Bottle({ model }: { model: ModelOption }) {
       delta,
     );
     node.rotation.x = damp(node.rotation.x, t.rotX + stage.pointer.y * 0.05, 3, delta);
+    node.rotation.z = damp(
+      node.rotation.z,
+      t.rotZ + spinZ.current + stage.dragOffsetZ,
+      4,
+      delta,
+    );
     const s = damp(node.scale.x, t.scale, 3, delta);
     node.scale.setScalar(s);
 
