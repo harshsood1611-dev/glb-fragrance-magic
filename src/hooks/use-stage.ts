@@ -1,6 +1,8 @@
 import { useEffect, useSyncExternalStore } from "react";
 import {
   getModelIndex,
+  getSpinZ,
+  subscribeSpinZ,
   getVariantIndex,
   lerp,
   stage,
@@ -64,6 +66,7 @@ export function useStageScroll() {
         scale: lerp(read(a, "scale", 1), read(b, "scale", 1), ease),
         rotY: lerp(read(a, "roty", 0), read(b, "roty", 0), ease),
         rotX: lerp(read(a, "rotx", 0), read(b, "rotx", 0), ease),
+        rotZ: lerp(read(a, "rotz", 0), read(b, "rotz", 0), ease),
       };
     };
 
@@ -99,20 +102,26 @@ export function useDragRotate() {
   useEffect(() => {
     let active = false;
     let lastX = 0;
+    let lastY = 0;
 
     const down = (event: PointerEvent) => {
       const target = event.target as HTMLElement | null;
       if (!target?.closest("[data-rotate-zone]")) return;
       active = true;
       lastX = event.clientX;
+      lastY = event.clientY;
       document.body.classList.add("is-grabbing");
     };
 
     const move = (event: PointerEvent) => {
       if (!active) return;
       const delta = (event.clientX - lastX) / window.innerWidth;
+      const deltaY = (event.clientY - lastY) / window.innerHeight;
       lastX = event.clientX;
+      lastY = event.clientY;
       stage.dragVelocity += delta * 6;
+      // Vertical drag tumbles the bottle around its Z axis.
+      stage.dragVelocityZ += deltaY * 6;
     };
 
     const up = () => {
@@ -193,4 +202,13 @@ export function useModel() {
     () => 0,
   );
   return { index, model: MODELS[index] ?? MODELS[0]! };
+}
+
+export function useSpinZ() {
+  const on = useSyncExternalStore(
+    (fn) => subscribeSpinZ(fn),
+    getSpinZ,
+    () => false,
+  );
+  return on;
 }
