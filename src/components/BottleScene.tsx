@@ -20,7 +20,7 @@ function Bottle({ model }: { model: ModelOption }) {
     const center = new THREE.Vector3();
     box.getSize(size);
     box.getCenter(center);
-    const unit = 2.6 / Math.max(size.x, size.y, size.z);
+    const unit = model.scale / Math.max(size.x, size.y, size.z);
     clone.scale.setScalar(unit);
     clone.position.set(-center.x * unit, -center.y * unit, -center.z * unit);
 
@@ -29,8 +29,9 @@ function Bottle({ model }: { model: ModelOption }) {
       if (!mesh.isMesh) return;
       const material = mesh.material as THREE.MeshStandardMaterial;
       if (!material || Array.isArray(mesh.material)) return;
-      const name = material.name ?? "";
-      if (name.includes("glass")) {
+      const name = (material.name ?? "").toLowerCase();
+      const hasNamedParts = name.includes("glass") || name.includes("liquid");
+      if (name.includes("glass") || !hasNamedParts) {
         mesh.material = new THREE.MeshPhysicalMaterial({
           transmission: 1,
           thickness: 1.1,
@@ -55,7 +56,7 @@ function Bottle({ model }: { model: ModelOption }) {
     });
 
     return clone;
-  }, [gltf]);
+  }, [gltf, model.scale]);
 
   const liquidMaterials = useMemo(() => {
     const found: THREE.MeshPhysicalMaterial[] = [];
@@ -174,6 +175,7 @@ function Loader() {
 
 export default function BottleScene() {
   const { variant } = useVariant();
+  const { model } = useModel();
 
   return (
     <>
@@ -194,7 +196,7 @@ export default function BottleScene() {
         />
         <Suspense fallback={null}>
           <Environment preset="studio" environmentIntensity={0.85} />
-          <Bottle />
+          <Bottle key={model.id} model={model} />
           <ScentTrail color={variant.glow} />
         </Suspense>
       </Canvas>
