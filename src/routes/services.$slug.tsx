@@ -32,7 +32,7 @@ export const Route = createFileRoute("/services/$slug")({
     };
   },
   notFoundComponent: ServiceNotFound,
-  component: ServiceDetail;
+  component: ServiceDetail,
 });
 
 function ServiceNotFound() {
