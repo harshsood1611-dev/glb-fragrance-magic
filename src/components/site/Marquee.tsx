@@ -1,14 +1,29 @@
-export function Marquee({ items }: { items: string[] }) {
-  const doubled = [...items, ...items];
+import { cn } from "@/lib/utils";
+
+type Props = {
+  items: string[];
+  reverse?: boolean;
+  className?: string;
+  separator?: string;
+};
+
+export function Marquee({ items, reverse, className, separator = "✦" }: Props) {
+  const row = [...items, ...items];
   return (
-    <div className="overflow-hidden border-y border-border py-5">
-      <div className="marquee-track gap-14">
-        {doubled.map((item, index) => (
+    <div
+      className={cn(
+        "relative overflow-hidden border-y border-border py-5",
+        className,
+      )}
+    >
+      <div className={reverse ? "marquee-track-reverse" : "marquee-track"}>
+        {row.map((item, i) => (
           <span
-            key={`${item}-${index}`}
-            className="shimmer-text font-display text-2xl whitespace-nowrap sm:text-3xl"
+            key={`${item}-${i}`}
+            className="flex shrink-0 items-center gap-8 px-8 font-display text-2xl whitespace-nowrap sm:text-3xl"
           >
             {item}
+            <span className="text-primary">{separator}</span>
           </span>
         ))}
       </div>
