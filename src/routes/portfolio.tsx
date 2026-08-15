@@ -109,7 +109,7 @@ function Portfolio() {
               client={project.client}
               category={project.category}
               result={project.result}
-              span={SPANS[i % SPANS.length]}
+              span={SPANS[i % SPANS.length] ?? SPANS[0]!}
             />
           ))}
         </div>
