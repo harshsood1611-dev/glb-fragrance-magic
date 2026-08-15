@@ -1,421 +1,269 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { ModelControls, Stage3D } from "@/components/Stage3D";
-import { SplitHeadline } from "@/components/SplitHeadline";
-import { Faq } from "@/components/site/Faq";
 import { Marquee } from "@/components/site/Marquee";
-import { Nav } from "@/components/site/Nav";
+import { SplitText } from "@/components/site/SplitText";
 import {
-  useDragRotate,
-  useReveal,
-  useSmoothScroll,
-  useStageScroll,
-  useVariant,
-} from "@/hooks/use-stage";
-import { setVariant, VARIANTS } from "@/lib/stage";
+  CTABand,
+  MagneticLink,
+  ProjectCard,
+  SectionHeading,
+  StatGrid,
+  Testimonials,
+} from "@/components/site/ui";
+import { useParallax, useTilt } from "@/hooks/use-anim";
+import { CLIENTS, PROCESS, PROJECTS, SERVICES } from "@/lib/content";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Aurea Parfums — Dubai Niche Fragrance Atelier" },
+      { title: "Snapping Turtles — Global Digital Marketing Agency" },
       {
         name: "description",
         content:
-          "Aurea Parfums composes oud, Taif rose and desert musk extraits in Dubai. Explore the collection in interactive 3D and order worldwide.",
+          "Snapping Turtles is a global digital marketing agency delivering strategy, performance media, creative production and web engineering for ambitious brands.",
       },
-      { property: "og:title", content: "Aurea Parfums — Dubai Niche Fragrance Atelier" },
+      {
+        property: "og:title",
+        content: "Snapping Turtles — Global Digital Marketing Agency",
+      },
       {
         property: "og:description",
         content:
-          "Niche extraits hand-composed in Dubai. Explore each flacon in interactive 3D before you order.",
+          "Strategy, performance media, film and engineering under one roof. 241+ projects delivered across four studios.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://glb-fragrance-magic.lovable.app/" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://glb-fragrance-magic.lovable.app/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Snapping Turtles",
+          url: "https://glb-fragrance-magic.lovable.app/",
+          description:
+            "Global digital marketing agency delivering strategy, performance media, creative production and web engineering.",
+        }),
+      },
     ],
   }),
   component: Home,
 });
 
-const NOTE_PYRAMID = [
-  {
-    tier: "Top",
-    detail: "Saffron thread, bergamot zest, pink pepper",
-    time: "0–20 min",
-  },
-  {
-    tier: "Heart",
-    detail: "Taif rose absolute, Cambodian oud, jasmine sambac",
-    time: "20 min – 4 h",
-  },
-  {
-    tier: "Base",
-    detail: "Smoked amber, cashmeran, Mysore sandalwood",
-    time: "4 h – 12 h",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    name: "Layla Al Maktoum",
-    role: "Collector, Dubai",
-    quote:
-      "The oud is dense but never heavy — it holds through a whole evening in Downtown without shouting.",
-  },
-  {
-    name: "Ines Ferrand",
-    role: "Perfume critic, Paris",
-    quote:
-      "A genuinely Gulf composition with French restraint. The Taif rose is the finest I have smelled this year.",
-  },
-  {
-    name: "Omar Rahman",
-    role: "Founder, Marasi Group",
-    quote:
-      "I gift Aurea to every visiting partner. The flacon alone starts the conversation.",
-  },
-];
+function ServiceRow({
+  index,
+  slug,
+  title,
+  short,
+}: {
+  index: number;
+  slug: string;
+  title: string;
+  short: string;
+}) {
+  return (
+    <Link
+      to="/services/$slug"
+      params={{ slug }}
+      data-reveal
+      className="reveal group relative grid items-center gap-4 border-t border-border py-8 sm:grid-cols-[6rem_1fr_auto]"
+      style={{ transitionDelay: `${(index % 4) * 0.06}s` }}
+    >
+      <span className="font-mono text-xs text-primary">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <div>
+        <h3 className="font-display text-3xl transition-transform duration-500 group-hover:translate-x-3 sm:text-4xl">
+          {title}
+        </h3>
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground">{short}</p>
+      </div>
+      <span className="font-mono text-[0.6rem] tracking-[0.24em] uppercase text-muted-foreground transition-colors group-hover:text-primary">
+        Explore →
+      </span>
+    </Link>
+  );
+}
 
 function Home() {
-  useStageScroll();
-  useDragRotate();
-  useReveal();
-  useSmoothScroll();
-  const { index, variant } = useVariant();
-  const [cart, setCart] = useState(0);
+  const orbRef = useParallax<HTMLDivElement>(120);
+  const showreelRef = useTilt<HTMLDivElement>(5);
 
   return (
-    <div
-      id="top"
-      className="relative"
-      style={{ ["--accent-oklch" as string]: variant.accent }}
-    >
-      <div className="curtain pointer-events-none fixed inset-0 z-50 bg-background" />
-      <Stage3D />
-      <ModelControls />
-      <Nav count={cart} />
+    <div className="relative">
+      {/* HERO */}
+      <section className="relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-36 pb-16 sm:px-8">
+        <div className="grid-lines pointer-events-none absolute inset-0 opacity-40" />
+        <div
+          ref={orbRef}
+          className="pointer-events-none absolute -top-20 right-[-10%] size-[42rem] rounded-full bg-primary/12 blur-[120px]"
+        />
+        <div className="pointer-events-none absolute bottom-[-15%] left-[-10%] size-[30rem] rounded-full bg-accent/12 blur-[110px] float-slow" />
 
-      {/* HERO — pinned bottle occluding an oversized headline */}
-      <section
-        data-stage
-        data-x="0"
-        data-y="0.15"
-        data-scale="1"
-        data-roty="0"
-        data-rotx="0"
-        data-rotate-zone
-        className="pointer-events-auto relative flex min-h-screen flex-col justify-center overflow-hidden px-4 pt-28 sm:px-8"
-      >
-        <div className="relative z-10 mx-auto w-full max-w-6xl text-center">
-          <p className="eyebrow">Dubai · Est. 2019 · Extrait de Parfum</p>
-          <h1 className="mt-6 font-display text-[19vw] leading-[0.82] tracking-tight uppercase sm:text-[15vw]">
-            <SplitHeadline text="Aurea" className="block" charClassName="text-primary" delay={0.9} />
-            <SplitHeadline
-              text="Parfums"
-              className="block text-foreground/90"
-              delay={1.2}
+        <div className="relative mx-auto w-full max-w-7xl">
+          <p className="eyebrow flex items-center gap-3">
+            <span className="relative flex size-2">
+              <span className="pulse-ring absolute inset-0 rounded-full bg-primary" />
+              <span className="relative size-2 rounded-full bg-primary" />
+            </span>
+            Now taking briefs for Q4 · New York · London · Dubai · Noida
+          </p>
+
+          <h1 className="mt-8 font-display text-[16vw] leading-[0.86] tracking-tight uppercase sm:text-[12vw] lg:text-[9.5vw]">
+            <SplitText text="Marketing" className="block" delay={0.15} />
+            <SplitText
+              text="That Compounds"
+              className="signal-text block"
+              delay={0.45}
             />
           </h1>
-          <div className="hairline mx-auto mt-10 w-64" />
-          <p className="reveal mt-6 font-mono text-[0.7rem] tracking-[0.35em] uppercase sm:text-xs" data-reveal>
-            Oud · Taif Rose · Desert Musk
-          </p>
-        </div>
-        <div className="relative z-30 mx-auto mt-auto grid w-full max-w-6xl gap-4 pb-10 sm:grid-cols-3">
-          {[
-            ["Hand-composed", "12 raw materials, no filler"],
-            ["Drag the flacon", "Spin it with your cursor"],
-            ["Worldwide", "Dispatched from Al Quoz"],
-          ].map(([title, copy], i) => (
-            <div
-              key={title}
-              data-reveal
-              className="reveal glass-panel rounded-xl px-5 py-4 text-left"
-              style={{ transitionDelay: `${i * 0.12}s` }}
-            >
-              <p className="font-display text-lg">{title}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      <Marquee
-        items={["Extrait de Parfum", "Al Quoz Atelier", "Taif Rose", "Cambodian Oud", "Since 2019"]}
-      />
-
-      {/* NOTES — pyramid with the bottle held to one side */}
-      <section
-        id="notes"
-        data-stage
-        data-x="2.1"
-        data-y="0"
-        data-scale="0.92"
-        data-roty="1.1"
-        data-rotx="0.08"
-        className="relative min-h-screen px-4 py-28 sm:px-8"
-      >
-        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-          <div>
-            <p className="eyebrow" data-reveal>
-              The Pyramid
-            </p>
-            <h2
+          <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+            <p
               data-reveal
-              className="reveal mt-5 font-display text-5xl leading-[0.95] sm:text-6xl"
+              className="reveal max-w-xl text-lg leading-relaxed text-muted-foreground"
             >
-              A scent built in <span className="gold-text">three movements</span>
-            </h2>
-            <p data-reveal className="reveal mt-5 max-w-md text-muted-foreground">
-              Each Aurea extrait is constructed as an arc rather than an accord — an
-              opening that flashes, a heart that settles into the skin, and a base that
-              lingers long after the room has emptied.
+              We're a global digital marketing studio building brands that travel —
+              strategy, performance media, film and engineering, run by one senior
+              team across four cities.
             </p>
-            <div className="mt-10 space-y-5">
-              {NOTE_PYRAMID.map((note, i) => (
-                <div
-                  key={note.tier}
-                  data-reveal
-                  className="reveal flex items-start gap-5 border-t border-border pt-5"
-                  style={{ transitionDelay: `${i * 0.15}s` }}
-                >
-                  <span className="font-mono text-xs text-primary">0{i + 1}</span>
-                  <div>
-                    <p className="font-display text-2xl">{note.tier}</p>
-                    <p className="mt-1 text-sm text-muted-foreground">{note.detail}</p>
-                    <p className="mt-1 font-mono text-[0.65rem] tracking-[0.3em] uppercase text-muted-foreground">
-                      {note.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div data-reveal className="reveal flex flex-wrap gap-4 lg:justify-end">
+              <MagneticLink to="/services">Discover our services</MagneticLink>
+              <MagneticLink to="/our-work" variant="ghost">
+                View case studies
+              </MagneticLink>
             </div>
           </div>
-          <div className="hidden lg:block" />
         </div>
       </section>
 
-      {/* VARIANTS — selecting a fragrance morphs the liquid + page accent */}
-      <section
-        data-stage
-        data-x="-2"
-        data-y="0"
-        data-scale="0.95"
-        data-roty="-0.9"
-        data-rotx="0"
-        className="relative min-h-screen px-4 py-28 sm:px-8"
-      >
-        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-          <div className="hidden lg:block" />
-          <div>
-            <p className="eyebrow" data-reveal>
-              Three Compositions
-            </p>
-            <h2 data-reveal className="reveal mt-5 font-display text-5xl sm:text-6xl">
-              Choose your <span className="gold-text">signature</span>
-            </h2>
-            <p data-reveal className="reveal mt-4 text-muted-foreground">
-              Select a composition — the flacon, its light and the whole page shift to
-              match the juice.
-            </p>
-            <div className="mt-10 space-y-3">
-              {VARIANTS.map((item, i) => {
-                const active = i === index;
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setVariant(i)}
-                    className="reveal group flex w-full items-center justify-between gap-6 rounded-xl border px-5 py-5 text-left transition-all duration-500"
-                    data-reveal
-                    style={{
-                      borderColor: active
-                        ? "oklch(var(--accent-oklch) / 60%)"
-                        : "var(--color-border)",
-                      background: active
-                        ? "oklch(var(--accent-oklch) / 8%)"
-                        : "transparent",
-                      boxShadow: active ? "var(--glow-accent)" : "none",
-                      transitionDelay: `${i * 0.1}s`,
-                    }}
-                    aria-pressed={active}
-                  >
-                    <span>
-                      <span className="font-display text-2xl">{item.name}</span>
-                      <span className="mt-1 block text-sm text-muted-foreground">
-                        {item.notes}
-                      </span>
-                    </span>
-                    <span className="font-mono text-sm text-primary">
-                      AED {item.price}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              type="button"
-              onClick={() => setCart((c) => c + 1)}
-              className="mt-8 w-full rounded-full bg-primary px-8 py-4 font-mono text-[0.7rem] tracking-[0.3em] text-primary-foreground uppercase transition-transform duration-300 hover:scale-[1.02] sm:w-auto"
-            >
-              Add {variant.name} · AED {variant.price}
-            </button>
+      {/* CLIENT RIBBON */}
+      <div className="relative">
+        <p className="eyebrow px-4 pb-5 text-center sm:px-8">
+          Trusted by the world's biggest brands
+        </p>
+        <Marquee items={CLIENTS} />
+        <Marquee items={[...CLIENTS].reverse()} reverse separator="—" />
+      </div>
+
+      {/* STATS */}
+      <section className="px-0 py-24">
+        <StatGrid />
+      </section>
+
+      {/* SERVICES */}
+      <section className="relative px-4 py-16 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="What we do"
+            title="Nine capabilities,"
+            accent="one accountable team"
+            copy="No handoffs between agencies. Strategy, creative, media and engineering sit in the same room and share the same KPI."
+          />
+          <div className="mt-16">
+            {SERVICES.map((service, i) => (
+              <ServiceRow key={service.slug} index={i} {...service} />
+            ))}
+            <div className="border-t border-border" />
           </div>
         </div>
       </section>
 
-      {/* COLLECTION — horizontal scroll carousel */}
-      <section id="collection" className="relative py-28">
-        <div className="mx-auto mb-12 max-w-6xl px-4 sm:px-8">
-          <p className="eyebrow" data-reveal>
-            The Collection
-          </p>
-          <h2 data-reveal className="reveal mt-5 font-display text-5xl sm:text-6xl">
-            Flacons in <span className="gold-text">gold leaf</span>
-          </h2>
-        </div>
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 sm:px-8">
-          {[...VARIANTS, ...VARIANTS].map((item, i) => (
-            <article
-              key={`${item.id}-${i}`}
-              data-reveal
-              className="reveal glass-panel w-[78vw] shrink-0 snap-center rounded-2xl p-7 sm:w-[380px]"
-              style={{ transitionDelay: `${(i % 3) * 0.1}s` }}
-            >
-              <div
-                className="h-52 rounded-xl"
-                style={{
-                  background: `radial-gradient(60% 60% at 50% 40%, ${item.glow}55, transparent 70%)`,
-                }}
-              />
-              <p className="mt-6 font-display text-3xl">{item.name}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{item.notes}</p>
-              <div className="mt-6 flex items-center justify-between">
-                <span className="font-mono text-sm text-primary">AED {item.price}</span>
-                <button
-                  type="button"
-                  onClick={() => setCart((c) => c + 1)}
-                  className="rounded-full border border-border px-5 py-2 font-mono text-[0.6rem] tracking-[0.25em] uppercase transition-colors hover:border-primary hover:text-primary"
-                >
-                  Add
-                </button>
+      {/* SHOWREEL */}
+      <section className="relative px-4 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div
+            ref={showreelRef}
+            data-reveal
+            className="clip-reveal glass-panel relative overflow-hidden rounded-3xl"
+          >
+            <div className="grid-lines pointer-events-none absolute inset-0 opacity-30" />
+            <div className="relative aspect-[16/8] w-full">
+              <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_50%,oklch(0.84_0.19_145/18%),transparent_70%)]" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 text-center">
+                <p className="eyebrow">Showreel 2026</p>
+                <p className="font-display text-4xl leading-tight sm:text-6xl">
+                  70+ films.
+                  <br />
+                  <span className="outline-text">Made in-house.</span>
+                </p>
+                <MagneticLink to="/portfolio" variant="ghost">
+                  Watch the reel
+                </MagneticLink>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* ATELIER — drag to rotate */}
-      <section
-        id="atelier"
-        data-stage
-        data-x="-1.9"
-        data-y="-0.1"
-        data-scale="1.05"
-        data-roty="-2.2"
-        data-rotx="-0.05"
-        data-rotate-zone
-        className="pointer-events-auto relative min-h-screen px-4 py-28 sm:px-8"
-      >
-        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2">
-          <div className="hidden lg:block" />
-          <div>
-            <p className="eyebrow" data-reveal>
-              The Atelier
-            </p>
-            <h2 data-reveal className="reveal mt-5 font-display text-5xl sm:text-6xl">
-              Cut, filled and <span className="gold-text">sealed by hand</span>
-            </h2>
-            <p data-reveal className="reveal mt-5 text-muted-foreground">
-              Our flacons are blown in Murano glass, gilded in Dubai and filled in
-              batches of two hundred. Drag anywhere on this section to turn the bottle
-              and read the engraving.
-            </p>
-            <dl className="mt-10 grid grid-cols-2 gap-6">
-              {[
-                ["200", "Bottles per batch"],
-                ["30%", "Oil concentration"],
-                ["12", "Raw materials"],
-                ["48h", "Engraving time"],
-              ].map(([value, label], i) => (
-                <div
-                  key={label}
-                  data-reveal
-                  className="reveal border-t border-border pt-4"
-                  style={{ transitionDelay: `${i * 0.1}s` }}
-                >
-                  <dt className="font-display text-4xl gold-text">{value}</dt>
-                  <dd className="mt-1 font-mono text-[0.65rem] tracking-[0.25em] uppercase text-muted-foreground">
-                    {label}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* VOICES */}
-      <section id="voices" className="relative px-4 py-28 sm:px-8">
-        <div className="mx-auto max-w-6xl">
-          <p className="eyebrow" data-reveal>
-            Voices
-          </p>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {TESTIMONIALS.map((item, i) => (
-              <figure
-                key={item.name}
-                data-reveal
-                className="reveal glass-panel rounded-2xl p-7"
-                style={{ transitionDelay: `${i * 0.12}s` }}
-              >
-                <blockquote className="font-display text-xl leading-snug">
-                  “{item.quote}”
-                </blockquote>
-                <figcaption className="mt-6 font-mono text-[0.65rem] tracking-[0.25em] uppercase text-muted-foreground">
-                  {item.name} — {item.role}
-                </figcaption>
-              </figure>
+      {/* FEATURED WORK */}
+      <section className="relative px-4 py-16 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-wrap items-end justify-between gap-8">
+            <SectionHeading
+              eyebrow="Our work"
+              title="Real outcomes for"
+              accent="real businesses"
+            />
+            <div data-reveal className="reveal">
+              <MagneticLink to="/our-work" variant="ghost">
+                All case studies
+              </MagneticLink>
+            </div>
+          </div>
+          <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {PROJECTS.slice(0, 6).map((project, i) => (
+              <ProjectCard key={project.slug} project={project} index={i} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQ + CTA */}
-      <section
-        data-stage
-        data-x="0"
-        data-y="-0.4"
-        data-scale="0.75"
-        data-roty="-3"
-        data-rotx="0.1"
-        className="relative px-4 py-28 sm:px-8"
-      >
-        <div className="mx-auto max-w-6xl">
-          <p className="eyebrow" data-reveal>
-            Questions
-          </p>
-          <h2 data-reveal className="reveal mt-5 mb-12 font-display text-5xl sm:text-6xl">
-            Before you <span className="gold-text">order</span>
-          </h2>
-          <Faq />
+      {/* PROCESS */}
+      <section className="relative px-4 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeading
+            eyebrow="How we work"
+            title="Five phases,"
+            accent="zero guesswork"
+          />
+          <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+            {PROCESS.map((phase, i) => (
+              <div
+                key={phase.step}
+                data-reveal
+                className="reveal sweep-card glass-panel rounded-2xl p-6"
+                style={{ transitionDelay: `${i * 0.08}s` }}
+              >
+                <p className="font-mono text-xs text-primary">{phase.step}</p>
+                <h3 className="relative z-10 mt-4 font-display text-2xl">
+                  {phase.title}
+                </h3>
+                <p className="relative z-10 mt-3 text-sm text-muted-foreground">
+                  {phase.copy}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <footer className="relative border-t border-border px-4 py-20 text-center sm:px-8">
-        <p data-reveal className="reveal font-display text-6xl uppercase sm:text-8xl">
-          <span className="shimmer-text">Wear the night</span>
-        </p>
-        <a
-          href="#collection"
-          className="mt-10 inline-block rounded-full bg-primary px-10 py-4 font-mono text-[0.7rem] tracking-[0.3em] text-primary-foreground uppercase transition-transform duration-300 hover:scale-105"
-        >
-          Shop the collection
-        </a>
-        <p className="mt-14 font-mono text-[0.6rem] tracking-[0.3em] uppercase text-muted-foreground">
-          Aurea Parfums · Al Quoz, Dubai · © 2026
-        </p>
-      </footer>
+      {/* TESTIMONIALS */}
+      <section className="relative py-16">
+        <div className="mx-auto mb-12 max-w-7xl px-4 sm:px-8">
+          <SectionHeading
+            eyebrow="Voices"
+            title="What partners"
+            accent="say about us"
+          />
+        </div>
+        <Testimonials />
+      </section>
+
+      <CTABand />
     </div>
   );
 }
