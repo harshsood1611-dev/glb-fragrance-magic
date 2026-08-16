@@ -1,4 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute, Link } from "@tanstack/react-router";
+import { lazy, Suspense } from "react";
 
 import { Marquee } from "@/components/site/Marquee";
 import { SplitText } from "@/components/site/SplitText";
@@ -12,6 +13,12 @@ import {
 } from "@/components/site/ui";
 import { useParallax, useTilt } from "@/hooks/use-anim";
 import { CLIENTS, PROCESS, PROJECTS, SERVICES } from "@/lib/content";
+
+const BottleExperience = lazy(() =>
+  import("@/components/site/BottleExperience").then((module) => ({
+    default: module.BottleExperience,
+  })),
+);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -103,7 +110,17 @@ function Home() {
         />
         <div className="pointer-events-none absolute bottom-[-15%] left-[-10%] size-[30rem] rounded-full bg-accent/12 blur-[110px] float-slow" />
 
-        <div className="relative mx-auto w-full max-w-7xl">
+        <ClientOnly
+          fallback={
+            <div className="pointer-events-none absolute inset-y-24 right-0 w-full sm:w-[58%] lg:w-[52%]" />
+          }
+        >
+          <Suspense fallback={null}>
+            <BottleExperience />
+          </Suspense>
+        </ClientOnly>
+
+        <div className="pointer-events-none relative z-10 mx-auto w-full max-w-7xl">
           <p className="eyebrow flex items-center gap-3">
             <span className="relative flex size-2">
               <span className="pulse-ring absolute inset-0 rounded-full bg-primary" />
@@ -131,7 +148,7 @@ function Home() {
               strategy, performance media, film and engineering, run by one senior
               team across four cities.
             </p>
-            <div data-reveal className="reveal flex flex-wrap gap-4 lg:justify-end">
+            <div data-reveal className="reveal pointer-events-auto flex flex-wrap gap-4 lg:justify-end">
               <MagneticLink to="/services">Discover our services</MagneticLink>
               <MagneticLink to="/our-work" variant="ghost">
                 View case studies
