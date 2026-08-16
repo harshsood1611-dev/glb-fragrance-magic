@@ -13,6 +13,12 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
+import {
+  useCursorGlow,
+  useReveal,
+  useScrollProgress,
+  useSmoothScroll,
+} from "../hooks/use-anim";
 
 function NotFoundComponent() {
   return (
@@ -128,9 +134,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useReveal();
+  useSmoothScroll();
+  useCursorGlow();
+  const progress = useScrollProgress();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <div
+        className="fixed top-0 left-0 z-[60] h-0.5 bg-primary transition-[width] duration-150"
+        style={{ width: `${progress * 100}%` }}
+      />
       <Header />
       <main>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
