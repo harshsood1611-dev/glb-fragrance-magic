@@ -116,7 +116,8 @@ function Home() {
             <SplitText text="Marketing" className="block" delay={0.15} />
             <SplitText
               text="That Compounds"
-              className="signal-text block"
+              className="block"
+              charClassName="signal-text"
               delay={0.45}
             />
           </h1>
