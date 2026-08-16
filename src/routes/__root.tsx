@@ -85,10 +85,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Aurea Parfums — Dubai Fragrance Atelier" },
+      { title: "Snapping Turtles — Global Digital Marketing Agency" },
       {
         name: "description",
-        content: "Niche extraits hand-composed in Dubai, shown in interactive 3D.",
+        content:
+          "Strategy, performance media, creative production and web engineering for ambitious international brands.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
