@@ -76,7 +76,7 @@ function BottleModel({
 }
 
 export function BottleExperience() {
-  const [modelIndex, setModelIndex] = useState(0);
+  const [modelUrl, setModelUrl] = useState(MODELS[0].url);
   const [spinZ, setSpinZ] = useState(false);
   const drag = useRef<DragState>({
     active: false,
@@ -126,12 +126,12 @@ export function BottleExperience() {
         >
           <ambientLight intensity={1.8} />
           <directionalLight position={[4, 6, 5]} intensity={4.5} />
-          <directionalLight position={[-5, 1, 3]} intensity={2.5} color="#90ffbd" />
-          <pointLight position={[0, -3, 4]} intensity={2.8} color="#ffae69" />
+          <directionalLight position={[-5, 1, 3]} intensity={2.5} />
+          <pointLight position={[0, -3, 4]} intensity={2.8} />
           <Suspense fallback={null}>
             <BottleModel
-              key={MODELS[modelIndex].url}
-              url={MODELS[modelIndex].url}
+              key={modelUrl}
+              url={modelUrl}
               spinZ={spinZ}
               drag={drag}
             />
@@ -140,14 +140,14 @@ export function BottleExperience() {
       </div>
 
       <div className="glass-panel absolute right-4 bottom-1 z-30 flex items-center gap-1 rounded-md p-1 sm:right-8 sm:bottom-4">
-        {MODELS.map((model, index) => (
+        {MODELS.map((model) => (
           <Button
             key={model.label}
             type="button"
             size="sm"
-            variant={modelIndex === index ? "default" : "ghost"}
-            onClick={() => setModelIndex(index)}
-            aria-pressed={modelIndex === index}
+            variant={modelUrl === model.url ? "default" : "ghost"}
+            onClick={() => setModelUrl(model.url)}
+            aria-pressed={modelUrl === model.url}
           >
             {model.label}
           </Button>
