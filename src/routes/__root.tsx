@@ -13,6 +13,12 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Header } from "../components/site/Header";
 import { Footer } from "../components/site/Footer";
+import {
+  useCursorGlow,
+  useReveal,
+  useScrollProgress,
+  useSmoothScroll,
+} from "../hooks/use-anim";
 
 function NotFoundComponent() {
   return (
@@ -79,10 +85,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Aurea Parfums — Dubai Fragrance Atelier" },
+      { title: "Snapping Turtles — Global Digital Marketing Agency" },
       {
         name: "description",
-        content: "Niche extraits hand-composed in Dubai, shown in interactive 3D.",
+        content:
+          "Strategy, performance media, creative production and web engineering for ambitious international brands.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -100,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&family=IBM+Plex+Mono:wght@400&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
@@ -128,9 +135,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  useReveal();
+  useSmoothScroll();
+  useCursorGlow();
+  const progress = useScrollProgress();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <div
+        className="fixed top-0 left-0 z-[60] h-0.5 bg-primary transition-[width] duration-150"
+        style={{ width: `${progress * 100}%` }}
+      />
       <Header />
       <main>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
